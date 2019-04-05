@@ -9,5 +9,6 @@ import fr.xebia.extras.selma.Mapper;
 public interface MovieMapper {
 	
 	MovieDto getMovieDto(Movie m);
+	Movie getMovie(MovieDto m);
 
 }

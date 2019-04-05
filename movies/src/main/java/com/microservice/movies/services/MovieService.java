@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microservice.movies.dao.MoviesRepo;
 import com.microservice.movies.domains.Movie;
@@ -36,20 +38,22 @@ public class MovieService {
 				.collect(Collectors.toList());
 		String movieIds = StringUtils.join(movieIdsCollections);
 
-		Collection<MovieRate> ratings = fetchRatings(movieIds);
+		Collection<MovieRate> ratings = ratingsReader.read(movieIds);
 		Map<Long, Double> map = ratings.stream().collect(Collectors.toMap(MovieRate::getMovieId, MovieRate::getRate));
 		return movies.stream().map(mapper::getMovieDto).map(dto -> {
-			Double ratingValue = map.get(dto.getId());
-			if (ratingValue != null) {
-				dto.setRate(ratingValue);
-			}
+			dto.setRate(map.get(dto.getId()));
 			return dto;
 		}).collect(Collectors.toList());
 	}
 
-	public List<MovieRate> fetchRatings(String movieIds) {
-		return ratingsReader.read(movieIds);
+	@Transactional(propagation=Propagation.REQUIRED)
+	public MovieDto createMovie(MovieDto movieDto) {
+		Movie movie = this.mapper.getMovie(movieDto);
+		movie = this.movieRespo.save(movie);
+		movieDto.setId(movie.getId());
+		return movieDto;
 	}
+	
 
 	
 

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MovieRate{
 	
-	private String movieId;
+	private Long movieId;
 	
-	private String rate;
+	private Double rate;
 }

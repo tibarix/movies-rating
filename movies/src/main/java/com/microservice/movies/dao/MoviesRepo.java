@@ -1,12 +1,13 @@
 package com.microservice.movies.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.microservice.movies.domains.Movie;
 
-@Component
+@Repository
 public interface MoviesRepo extends JpaRepository<Movie, Long>{
+	
 	
 
 }

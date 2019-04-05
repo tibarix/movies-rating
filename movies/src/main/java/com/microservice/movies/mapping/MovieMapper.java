@@ -5,7 +5,7 @@ import com.microservice.movies.dto.MovieDto;
 
 import fr.xebia.extras.selma.Mapper;
 
-@Mapper
+@Mapper(withIgnoreFields= {"rate"})
 public interface MovieMapper {
 	
 	MovieDto getMovieDto(Movie m);

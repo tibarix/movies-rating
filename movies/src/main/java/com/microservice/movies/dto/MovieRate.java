@@ -5,17 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-public class MovieDto {
+public class MovieRate{
 	
-	private Long id;
+	private String movieId;
 	
-	private String name;
-	
-	private String description;
-	
-	private double rate;
-
+	private String rate;
 }

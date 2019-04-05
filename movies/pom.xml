@@ -68,7 +68,6 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- scope provided because the processor is only needed at compile time -->

@@ -20,6 +20,7 @@ import com.microservice.movies.dao.MoviesRepo;
 import com.microservice.movies.domains.Movie;
 import com.microservice.movies.dto.MovieDto;
 import com.microservice.movies.dto.MovieRate;
+import com.microservice.movies.feign.RatingReader;
 import com.microservice.movies.mapping.MovieMapper;
 
 import fr.xebia.extras.selma.Selma;
@@ -37,7 +38,7 @@ public class MovieService {
 	private String address;
 
 	@Autowired
-	ReservationReader reader;
+	RatingReader reader;
 
 	private MovieMapper mapper = Selma.builder(MovieMapper.class).build();
 
@@ -63,20 +64,6 @@ public class MovieService {
 		return reader.read(movieIds);
 	}
 
-	@FeignClient(name = "rating-service", fallback = FallBackRatings.class)
-	interface ReservationReader {
-		@RequestMapping(method = RequestMethod.GET, value = "/all-ratings")
-		List<MovieRate> read(@RequestParam("movieIds") String movieIds);
-	}
-
-	@Component
-	class FallBackRatings implements ReservationReader {
-
-		@Override
-		public List<MovieRate> read(String movieIds) {
-			return Collections.emptyList();
-		}
-
-	}
+	
 
 }

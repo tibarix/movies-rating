@@ -1,6 +1,7 @@
 package com.microservice.movies.services;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,21 +48,35 @@ public class MovieService {
 				.collect(Collectors.toList());
 		String movieIds = StringUtils.join(movieIdsCollections);
 
-		Collection<MovieRate> rates = reader.read(movieIds);
-		Map<String,String> map = rates.stream().collect(Collectors.toMap(MovieRate::getMovieId, MovieRate::getRate));
+		Collection<MovieRate> rates = fetchRatings(movieIds);
+		Map<String, String> map = rates.stream().collect(Collectors.toMap(MovieRate::getMovieId, MovieRate::getRate));
 		return movies.stream().map(mapper::getMovieDto).map(dto -> {
-			dto.setRate(Double.valueOf(map.get(String.valueOf(dto.getId()))));
+			String mappedMovieId = map.get(String.valueOf(dto.getId()));
+			if (mappedMovieId != null) {
+				dto.setRate(Double.valueOf(mappedMovieId));
+			}
 			return dto;
 		}).collect(Collectors.toList());
 	}
 
-	@FeignClient("rating-service")
+	public List<MovieRate> fetchRatings(String movieIds) {
+		return reader.read(movieIds);
+	}
+
+	@FeignClient(name = "rating-service", fallback = FallBackRatings.class)
 	interface ReservationReader {
 		@RequestMapping(method = RequestMethod.GET, value = "/all-ratings")
 		List<MovieRate> read(@RequestParam("movieIds") String movieIds);
 	}
-	
-	
-	
+
+	@Component
+	class FallBackRatings implements ReservationReader {
+
+		@Override
+		public List<MovieRate> read(String movieIds) {
+			return Collections.emptyList();
+		}
+
+	}
 
 }

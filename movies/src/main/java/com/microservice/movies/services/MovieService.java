@@ -53,8 +53,4 @@ public class MovieService {
 		movieDto.setId(movie.getId());
 		return movieDto;
 	}
-	
-
-	
-
 }

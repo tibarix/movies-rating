@@ -1,22 +1,25 @@
 package com.microservice.rating.services;
 
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
-import org.springframework.messaging.SubscribableChannel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.microservice.rating.domains.Rating;
+import com.microservice.rating.dto.MovieRates;
+import com.microservice.rating.repositories.RatingRepository;
 
 @Service
-@EnableBinding(Sink.class)
 public class RatingService {
-	
-	SubscribableChannel channel;
-	
-	public  RatingService(Sink sink) {
-		this.channel = sink.input();
-	}
-	@StreamListener(Sink.INPUT)
-	public void createRating(Object o) {
+
+	@Autowired
+	RatingRepository repo;
+
+	@Transactional
+	public void createRating(MovieRates o) {
+		Rating r = new Rating();
+		r.setMovieId(o.getMovieId());
+		r.setValue(o.getRate());
+		repo.save(r);
 	}
 
 }

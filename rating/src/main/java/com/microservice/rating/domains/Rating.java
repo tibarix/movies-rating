@@ -23,6 +23,6 @@ public class Rating {
 	
 	private String review;
 	
-	private int value;
+	private Double value;
 
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 
-import com.microservice.rating.messages.listeners.Receiver;
+import com.microservice.rating.messages.listeners.CanReceiveMessage;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -28,7 +28,7 @@ public class RatingApplication {
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
+    MessageListenerAdapter listenerAdapter(CanReceiveMessage receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 

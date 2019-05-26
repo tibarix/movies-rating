@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.microservices.reviews.domain.Review;
 import com.microservices.reviews.dto.ReviewDto;
 import com.microservices.reviews.repositories.ReviewRepository;
 import com.microservices.reviews.services.ReviewService;
 
 @RestController
-
 public class ReviewController {
 	
 	
@@ -38,7 +38,7 @@ public class ReviewController {
 	}
 	
 	@PostMapping("/review")
-	public void postReviews(@RequestBody ReviewDto dto){
+	public void postReviews(@RequestBody ReviewDto dto) throws JsonProcessingException{
 		this.reviewService.createReview(dto);
 		
 	}

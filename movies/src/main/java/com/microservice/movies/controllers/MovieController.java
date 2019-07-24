@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservice.movies.dto.MovieDto;
+import com.microservice.movies.dao.MoviesRepo;
+import com.microservice.movies.domains.Movie;
 import com.microservice.movies.services.MovieService;
 
 @RestController("/")
@@ -19,17 +20,16 @@ public class MovieController {
 	@Autowired
 	private MovieService movieService;
 
+	@Autowired
+	private MoviesRepo repo;
+
 	@GetMapping("/movies")
-	public ResponseEntity<List<MovieDto>> getMovies() {
+	public ResponseEntity<List<Movie>> getMovies() {
 		return new ResponseEntity<>(movieService.getMovies(), HttpStatus.OK);
 	}
-	
-	@PostMapping("/movie")
-	public ResponseEntity<Void> createMovie(@RequestBody MovieDto movie){
-		this.movieService.createMovie(movie);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
-	}
-	
-	
 
+	@PostMapping("/movie")
+	public ResponseEntity<Movie> postMovie(@RequestBody Movie movie) {
+		return new ResponseEntity<>(repo.save(movie), HttpStatus.CREATED);
+	}
 }

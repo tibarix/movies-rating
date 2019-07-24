@@ -7,18 +7,13 @@ import java.util.stream.Collectors;
 
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.microservice.movies.dao.MoviesRepo;
 import com.microservice.movies.domains.Movie;
-import com.microservice.movies.dto.MovieDto;
 import com.microservice.movies.dto.MovieRate;
 import com.microservice.movies.feign.RatingReader;
-import com.microservice.movies.mapping.MovieMapper;
-
-import fr.xebia.extras.selma.Selma;
 
 @Service
 public class MovieService {
@@ -28,10 +23,12 @@ public class MovieService {
 
 	@Autowired
 	RatingReader ratingsReader;
+	
+	@Value("${movies.max_fetch_value:10}")
+	private int maxMoviewNumber;
 
-	private MovieMapper mapper = Selma.builder(MovieMapper.class).build();
 
-	public List<MovieDto> getMovies() {
+	public List<Movie> getMovies() {
 		List<Movie> movies = movieRespo.findAll();
 
 		List<String> movieIdsCollections = movies.stream().map(Movie::getId).map(id -> id.toString())
@@ -40,17 +37,14 @@ public class MovieService {
 
 		Collection<MovieRate> ratings = ratingsReader.read(movieIds);
 		Map<Long, Double> map = ratings.stream().collect(Collectors.toMap(MovieRate::getMovieId, MovieRate::getRate));
-		return movies.stream().map(mapper::getMovieDto).map(dto -> {
-			dto.setRate(map.get(dto.getId()));
-			return dto;
-		}).collect(Collectors.toList());
+		return movies
+				.stream()
+				.limit(maxMoviewNumber)
+				.map(movie -> {
+					movie.setRate(map.get(movie.getId()));
+					return movie;
+				})
+				.collect(Collectors.toList());
 	}
 
-	@Transactional(propagation=Propagation.REQUIRED)
-	public MovieDto createMovie(MovieDto movieDto) {
-		Movie movie = this.mapper.getMovie(movieDto);
-		movie = this.movieRespo.save(movie);
-		movieDto.setId(movie.getId());
-		return movieDto;
-	}
 }

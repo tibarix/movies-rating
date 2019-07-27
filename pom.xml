@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.5.BUILD-SNAPSHOT</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.microservices</groupId>
+	<artifactId>hub</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>movies-rating</name>
+	<description>Demo project for Spring Boot</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>Greenwich.BUILD-SNAPSHOT</spring-cloud.version>
+	</properties>
+	<modules>
+		
+		<module> config </module>
+		<module> eureka-server </module>
+		<module> movies </module>
+		<module> rating </module>
+		<module> reviews </module>
+		<module> gateway </module>
+
+	</modules>
+</project>

@@ -26,8 +26,6 @@ public class MovieController {
 	@Autowired
 	private MoviesRepo repo;
 	
-	@Value("${movies.max_fetch_value}")
-	private int maxMoviewNumber;
 
 	@GetMapping("/movies")
 	public ResponseEntity<List<Movie>> getMovies() {
@@ -37,10 +35,5 @@ public class MovieController {
 	@PostMapping("/movie")
 	public ResponseEntity<Movie> postMovie(@RequestBody Movie movie) {
 		return new ResponseEntity<>(repo.save(movie), HttpStatus.CREATED);
-	}
-	
-	@GetMapping("/conf")
-	public String getConfigValue() {
-		return String.valueOf(maxMoviewNumber);
 	}
 }

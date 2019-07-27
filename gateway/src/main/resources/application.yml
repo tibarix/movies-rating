@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: movies-gateway
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+server:
+  port: 8060
+zuul:
+  routes:
+    rating-service: /ratings/**
+    movies-service: /movies/**
+

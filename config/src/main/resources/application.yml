@@ -7,13 +7,12 @@ spring:
           #search-paths: '{application}'
           cloneOnStart: true
 
-          
 eureka:
   client:
-    enabled: true
     service-url:
-      default-zone: http://localhost:8761/eureka/
-      
+      defaultZone: http://${ADRESSE:localhost}:4000/eureka
+    enabled: true
+
 server:
   port: 1234
   

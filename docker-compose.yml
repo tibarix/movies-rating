@@ -1,0 +1,19 @@
+version: '2'
+services:
+  eureka-server:
+    image: movies-eureka-server
+    expose:
+      - "8761"
+    ports:
+      - "4000:8761"
+  config-server:
+    depends_on:
+      - eureka-server
+    image: movies-config-server
+    ports:
+      - "8000:1234"
+    environment:
+      server.port: 1234
+      eureka.client.enabled: 'true'
+      eureka.host: eureka-server
+      eureka.instance.preferIpAddress: 'true'

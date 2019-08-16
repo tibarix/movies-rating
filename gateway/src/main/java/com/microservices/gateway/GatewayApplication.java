@@ -2,10 +2,15 @@ package com.microservices.gateway;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.exception.ZuulException;
+import org.apache.tomcat.util.buf.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EnableZuulProxy
@@ -18,26 +23,15 @@ public class GatewayApplication {
 
 }
 
-class Filter extends ZuulFilter{
+@RestController
+class TestCtrl{
 
+	@Autowired
+	private Config conf;
 
-	@Override
-	public String filterType() {
-		return null;
+	@GetMapping
+	public String get(){
+		return StringUtils.join(conf.getBlocked(),',');
 	}
 
-	@Override
-	public int filterOrder() {
-		return 0;
-	}
-
-	@Override
-	public boolean shouldFilter() {
-		return false;
-	}
-
-	@Override
-	public Object run() throws ZuulException {
-		return null;
-	}
 }

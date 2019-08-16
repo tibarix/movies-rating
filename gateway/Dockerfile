@@ -6,4 +6,4 @@ WORKDIR /usr/app
 
 RUN sh -c 'touch gateway-0.0.1-SNAPSHOT.jar'
 
-ENTRYPOINT ["java","-jar","gateway-0.0.1-SNAPSHOT.jar","--EUREKA_SERVER_URL=http://10.42.5.173:4000/eureka/"]
+ENTRYPOINT ["java","-jar","gateway-0.0.1-SNAPSHOT.jar","--EUREKA_SERVER_URL=http://192.168.43.160:4000/eureka/"]

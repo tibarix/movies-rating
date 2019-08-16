@@ -3,6 +3,8 @@ spring:
     name: movies-gateway
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     enabled: true
     service-url:
